@@ -4,10 +4,10 @@ import {
 export const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        status: 'no-authenticated',//no-authenticated ,cheking
+        status: 'cheking',//no-authenticated ,cheking
         uid: null,
         email: null,
-        diplayName: null,
+        displayName: null,
         photoURL: null,
         errorMessage: null
     },
@@ -18,7 +18,7 @@ export const authSlice = createSlice({
             state.status= 'authenticated';//no-authenticated ,cheking
             state.uid = payload.uid;
              state.email = payload.email;
-             state.diplayName = payload.diplayName;
+             state.displayName = payload.displayName;
              state.photoURL = payload.photoURL;
              state.errorMessage = null;
 
@@ -28,9 +28,9 @@ export const authSlice = createSlice({
             state.status= 'no-authenticated';//no-authenticated ,cheking
            state.uid = null;
             state.email = null;
-            state.diplayName = null;
+            state.displayName = null;
             state.photoURL = null;
-            state.errorMessage = payload.errorMessage;
+            state.errorMessage = payload?.errorMessage;
         },
 
         chekingCredentials:(state)=>{

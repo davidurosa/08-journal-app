@@ -1,33 +1,56 @@
-import { Grid, Typography, TextField, Button, Link } from "@mui/material";
-import React from "react";
+import { Grid, Typography, TextField, Button, Link, Alert } from "@mui/material";
+import React, { useMemo, useState } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { startCreatingUserWithEmailPassword } from "../../store/auth/thunks";
 
 const formData = {
-  email: "urosaclawred21@gmail.com",
-  password: "123456",
-  displayName:'David Urosa'
+  email: "",
+  password: "",
+  displayName:''
+}
+
+
+const formValidations ={
+
+  email:[ (value) => value.includes('@'),'El correo debe tener un @'],
+  password:[ (value) => value.length >= 6,'El password debe tener mas de 6 letras'],
+  displayName:[ (value) => value.length >= 1,'El nombre es obligatorio']
 }
 
 
 export const RegisterPage = () => {
 
+const dispatch = useDispatch();
+  const [formSubmitted, setformSubmitted] = useState(false)
 
-  const { email, password,displayName, onInputChange,formState } = useForm(formData);
 
+const { status,errorMessage } = useSelector( state => state.auth );
+
+const isCheackingAuthentication = useMemo(()=> status ==='cheaking',[status])
+
+
+  const { email, password,displayName, onInputChange,formState,
+   isFormValid,displayNameValid,emailValid,passwordValid} = useForm(formData,formValidations);
+
+   
 
 const onSubmit=(event)=>{
 
   event.preventDefault();
-  console.log(formState);
+  setformSubmitted(true);
 
+  if(!isFormValid) return;
+
+  dispatch(startCreatingUserWithEmailPassword(formState));
 }
 
 
   return (
     <AuthLayout title="Register">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="animate__animated animate__fadeIn animate__faster">
         <Grid container>
           <Grid item>
             <TextField
@@ -36,7 +59,8 @@ const onSubmit=(event)=>{
               placeholder="Nombre completo"
               name="displayName"
               value={displayName}
-
+              error={!!displayNameValid && formSubmitted}
+              helperText={displayNameValid}
               onChange={onInputChange}
               fullWidth
               xs={12}
@@ -50,6 +74,8 @@ const onSubmit=(event)=>{
               name="email"
               value={email}
               onChange={onInputChange}
+              error={!!emailValid && formSubmitted}
+              helperText={emailValid}
               xs={12}
               sx={{ marginTop: 3 }}
             />
@@ -61,14 +87,21 @@ const onSubmit=(event)=>{
               name="password"
               value={password}
               onChange={onInputChange}
+              error={!!passwordValid && formSubmitted}
+              helperText={passwordValid}
               xs={12}
               sx={{ marginTop: 3 }}
             />
           </Grid>
         </Grid>
         <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
-          <Grid item xs={12} sm={6}>
-            <Button variant="contained" fullWidth type="submit">
+        <Grid item xs={12} display={!!errorMessage ? '':'none'} >
+            <Alert severity="error">
+              {errorMessage}
+            </Alert>
+          </Grid>
+          <Grid item xs={12}>
+            <Button disabled={isCheackingAuthentication} variant="contained" fullWidth type="submit">
                 Crear Cuenta
             </Button>
           </Grid>
