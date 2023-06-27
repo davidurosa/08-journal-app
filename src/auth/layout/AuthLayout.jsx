@@ -1,8 +1,11 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
+import { AppTheme } from "../../theme";
 
 export const AuthLayout = ({children,title=''}) => {
   return (
+    <AppTheme>
+      
     <Grid
       
       container
@@ -33,5 +36,6 @@ export const AuthLayout = ({children,title=''}) => {
         {children}
       </Grid>
     </Grid>
+    </AppTheme>
   );
 };

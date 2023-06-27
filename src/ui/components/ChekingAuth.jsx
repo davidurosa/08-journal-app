@@ -1,10 +1,11 @@
 import { CircularProgress, Grid } from "@mui/material";
+import { AppTheme } from "../../theme";
 
 export const ChekingAuth = () => {
   return (
+    <AppTheme>
     <Grid
       container
-      spacing={0}
       direction="column"
       alignItems="center"
       justifyContent="center"
@@ -18,9 +19,12 @@ export const ChekingAuth = () => {
         container
         justifyContent='center'
       >
-        <CircularProgress color="warning"/>
+        <CircularProgress  sx={{
+        color: "secondary.main",
+      }}/>
 
       </Grid>
     </Grid>
+    </AppTheme>
   );
 };

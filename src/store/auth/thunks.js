@@ -1,4 +1,5 @@
 import { loginWithEmailPassword, logoutFirebase, registerUserWithEmailPassword, sintInWithGoogle } from "../../firebase/providers";
+import { clearNotesLogout } from "../journal";
 import { chekingCredentials, login, logout } from "./authSlice"
 
 
@@ -20,7 +21,6 @@ export const startGoogleSingIn = () =>{
        if(!resp.ok) return dispatch(logout(resp.errorMessage))
 
         dispatch(login(resp));
-       console.log({resp});
    }
 }
 
@@ -34,7 +34,6 @@ export const startCreatingUserWithEmailPassword = ({email, password,displayName}
 
        if(!ok) return dispatch(logout({errorMessage}));
 
-       console.log(displayName);
        dispatch(login({email,uid,photoURL,displayName} ));
 
     }
@@ -51,7 +50,6 @@ return async (dispatch)=>{
 
     const resp = await loginWithEmailPassword({email,password})
     const {ok,uid,photoURL,errorMessage} = resp;
-    console.log(resp);
 
     if(!ok) return dispatch(logout(resp));
 
@@ -68,5 +66,7 @@ export const startLogout =()=>{
       await logoutFirebase()
 
       dispatch(logout());
+
+      dispatch(clearNotesLogout());
     }
 }

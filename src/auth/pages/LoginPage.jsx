@@ -10,27 +10,29 @@ import {
   startLoginWithEmailPassword,
 } from "../../store/auth/thunks";
 
+const formData = {
+  
+    email:"" ,
+    password:"",
+  
+}
+
 export const LoginPage = () => {
   const { status ,errorMessage} = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
-  const { email, password, onInputChange } = useForm({
-    email: "urosaclawred21@gmail.com",
-    password: "123456",
-  });
+  const { email, password, onInputChange } = useForm(formData);
 
   const isAuthenticating = useMemo(() => status === "cheking", [status]);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log({ email, password });
 
     dispatch(startLoginWithEmailPassword({ email, password}));
   };
 
   const onGoogleSingIn = (event) => {
-    console.log("google");
     dispatch(startGoogleSingIn());
   };
 
